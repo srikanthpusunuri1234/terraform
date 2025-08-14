@@ -1,30 +1,29 @@
-name: Auto-merge to master
+name: Notify Reviewers for Merge Approval
 
 on:
   push:
     branches:
+      - frontend-final
       - backend-dev
-      - master
 
 jobs:
-  auto-merge:
+  notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Send email to reviewers
+        uses: dawidd6/action-send-mail@v3
         with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }} # your Gmail
+          password: ${{ secrets.EMAIL_PASSWORD }} # app password
+          subject: "Approval Needed: Merge into master"
+          to: srikanthpusunuri1165@gmail.com, srikanthp2425@gmail.com
+          from: "GitHub Actions <${{ secrets.EMAIL_USERNAME }}>"
+          body: |
+            Hello Reviewer,
 
-      - name: Configure Git
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+            A push was made to ${{ github.ref_name }}.
+            Please review and approve the merge into master.
 
-      - name: Merge into master
-        run: |
-          BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          git checkout master
-          git pull origin master
-          git merge origin/$BRANCH_NAME --no-ff -m "Auto-merge $BRANCH_NAME into master"
-          git push origin master
+            Link: https://github.com/${{ github.repository }}/pulls
