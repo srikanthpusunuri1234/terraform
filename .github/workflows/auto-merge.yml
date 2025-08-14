@@ -1,0 +1,30 @@
+name: Auto-merge to Viaridez-UAT
+
+on:
+  push:
+    branches:
+      - frontend-final
+      - viaridez-backend
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Merge into Viaridez-UAT
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          git checkout Viaridez-UAT
+          git pull origin Viaridez-UAT
+          git merge origin/$BRANCH_NAME --no-ff -m "Auto-merge $BRANCH_NAME into Viaridez-UAT"
+          git push origin Viaridez-UAT
