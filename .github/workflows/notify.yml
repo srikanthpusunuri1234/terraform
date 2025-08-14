@@ -27,7 +27,7 @@ jobs:
 
       - name: Merge into master
         run: |
-          PR_BRANCH=${GITHUB_REF#refs/heads/}
+          PR_BRANCH=${GITHUB_HEAD_REF}
           git fetch origin
           git checkout master
           git pull origin master
