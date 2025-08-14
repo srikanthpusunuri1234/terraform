@@ -5,6 +5,11 @@ on:
     branches:
       - backend-dev
       - master
+  repository_dispatch:
+    types: [deploy-prod]
+    
+permissions:
+  contents: write
 
 jobs:
   auto-merge:
