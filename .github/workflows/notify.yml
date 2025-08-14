@@ -1,5 +1,9 @@
 name: Auto Merge After Approval
 
+permissions:
+  contents: write
+  pull-requests: write
+
 on:
   pull_request:
     types:
@@ -23,7 +27,7 @@ jobs:
 
       - name: Merge into master
         run: |
-          PR_BRANCH=${GITHUB_HEAD_REF}
+          PR_BRANCH=${GITHUB_REF#refs/heads/}
           git fetch origin
           git checkout master
           git pull origin master
