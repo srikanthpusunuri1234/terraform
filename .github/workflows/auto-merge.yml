@@ -1,10 +1,10 @@
-name: Auto-merge to Viaridez-UAT
+name: Auto-merge to main
 
 on:
   push:
     branches:
-      - frontend-final
-      - viaridez-backend
+      - backend-dev
+      - main
 
 jobs:
   auto-merge:
@@ -21,10 +21,10 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-      - name: Merge into Viaridez-UAT
+      - name: Merge into main
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          git checkout Viaridez-UAT
-          git pull origin Viaridez-UAT
-          git merge origin/$BRANCH_NAME --no-ff -m "Auto-merge $BRANCH_NAME into Viaridez-UAT"
-          git push origin Viaridez-UAT
+          git checkout main
+          git pull origin main
+          git merge origin/$BRANCH_NAME --no-ff -m "Auto-merge $BRANCH_NAME into main"
+          git push origin main
