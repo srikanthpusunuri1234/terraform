@@ -1,4 +1,4 @@
-name: Auto-merge to main
+name: Auto-merge to master
 
 on:
   push:
@@ -21,10 +21,10 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-      - name: Merge into main
+      - name: Merge into master
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          git checkout main
-          git pull origin main
-          git merge origin/$BRANCH_NAME --no-ff -m "Auto-merge $BRANCH_NAME into main"
-          git push origin main
+          git checkout master
+          git pull origin master
+          git merge origin/$BRANCH_NAME --no-ff -m "Auto-merge $BRANCH_NAME into master"
+          git push origin master
