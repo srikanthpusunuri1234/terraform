@@ -1,4 +1,4 @@
-name: Notify Reviewers for Merge Approval
+name: Notify and Auto-Merge
 
 on:
   push:
@@ -27,3 +27,27 @@ jobs:
             Please review and approve the merge into master.
 
             Link: https://github.com/${{ github.repository }}/pulls
+
+  auto-merge:
+    needs: notify
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'approved'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Merge into master
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          git checkout master
+          git pull origin master
+          git merge origin/$BRANCH_NAME --no-ff -m "Auto-merge $BRANCH_NAME into master"
+          git push origin master
