@@ -14,7 +14,7 @@ on:
       - labeled
 
 jobs:
-  create-pr-and-notify:
+  notify-and-pr:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
@@ -28,16 +28,19 @@ jobs:
           echo "author=$(git log -1 --pretty=%an)" >> $GITHUB_OUTPUT
           echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Create Pull Request if not exists
+      - name: Create or update Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Auto PR for ${{ github.ref_name }}"
+          commit-message: "Update PR for ${{ github.ref_name }}"
           title: "Merge ${{ github.ref_name }} into master"
           base: master
           head: ${{ github.ref_name }}
           body: |
             Auto-generated PR for branch: **${{ github.ref_name }}**
+            **Latest Commit:** ${{ steps.commit.outputs.msg }}
+            **Author:** ${{ steps.commit.outputs.author }}
+          update-existing: true   # <--- key part: update open PR if exists
 
       - name: Send email to reviewers
         uses: dawidd6/action-send-mail@v3
@@ -65,7 +68,7 @@ jobs:
   auto-merge:
     if: github.event_name == 'pull_request' && github.event.label.name == 'approved'
     runs-on: ubuntu-latest
-    needs: create-pr-and-notify
+    needs: notify-and-pr
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
