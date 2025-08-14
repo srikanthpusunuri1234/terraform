@@ -1,4 +1,8 @@
-name: Notify and Auto-Merge
+name: Notify Reviewers for Merge Approval & Auto Merge
+
+permissions:
+  contents: write
+  pull-requests: write
 
 on:
   push:
@@ -10,10 +14,31 @@ on:
       - labeled
 
 jobs:
-  notify:
+  create-pr-and-notify:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get latest commit info
+        id: commit
+        run: |
+          echo "msg=$(git log -1 --pretty=%s)" >> $GITHUB_OUTPUT
+          echo "author=$(git log -1 --pretty=%an)" >> $GITHUB_OUTPUT
+          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request if not exists
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Auto PR for ${{ github.ref_name }}"
+          title: "Merge ${{ github.ref_name }} into master"
+          base: master
+          head: ${{ github.ref_name }}
+          body: |
+            Auto-generated PR for branch: **${{ github.ref_name }}**
+
       - name: Send email to reviewers
         uses: dawidd6/action-send-mail@v3
         with:
@@ -23,23 +48,29 @@ jobs:
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "Approval Needed: Merge into master"
           to: srikanthpusunuri1165@gmail.com, srikanthp2425@gmail.com
-          from: "GitHub Actions <${{ secrets.EMAIL_USERNAME }}>"
+          from: "GitHub Actions <${{ secrets.EMAIL_USERNAME }}>}"
           body: |
             Hello Reviewer,
-            A push was made to ${{ github.ref_name }}.
+
+            A push was made to branch: **${{ github.ref_name }}**
+
+            **Commit Message:** ${{ steps.commit.outputs.msg }}
+            **Author:** ${{ steps.commit.outputs.author }}
+            **Commit Link:** https://github.com/${{ github.repository }}/commit/${{ steps.commit.outputs.sha }}
+
             Please review and approve the merge into master.
-            Link: https://github.com/${{ github.repository }}/pulls
+
+            Pull Requests: https://github.com/${{ github.repository }}/pulls
 
   auto-merge:
     if: github.event_name == 'pull_request' && github.event.label.name == 'approved'
     runs-on: ubuntu-latest
+    needs: create-pr-and-notify
     steps:
-      - name: Checkout PR branch
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ github.head_ref }}
 
       - name: Configure Git
         run: |
@@ -48,7 +79,9 @@ jobs:
 
       - name: Merge into master
         run: |
+          PR_BRANCH=${GITHUB_HEAD_REF}
+          git fetch origin
           git checkout master
           git pull origin master
-          git merge ${{ github.head_ref }} --no-ff -m "Auto-merge PR #${{ github.event.pull_request.number }} into master"
+          git merge origin/$PR_BRANCH --no-ff -m "Auto-merge $PR_BRANCH into master"
           git push origin master
