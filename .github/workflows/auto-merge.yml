@@ -39,9 +39,9 @@ jobs:
               --title "Auto PR: ${{ github.ref_name }} → master" \
               --body "Automated PR created from push to **${{ github.ref_name }}**.
 
-**Commit Message:** ${{ steps.commit.outputs.msg }}
-**Author:** ${{ steps.commit.outputs.author }}
-**Commit Link:** https://github.com/${{ github.repository }}/commit/${{ steps.commit.outputs.sha }}" \
+                **Commit Message:** ${{ steps.commit.outputs.msg }}
+                **Author:** ${{ steps.commit.outputs.author }}
+                **Commit Link:** https://github.com/${{ github.repository }}/commit/${{ steps.commit.outputs.sha }}" \
               --reviewer srikanthpusunuri1165)
             echo "pr_url=$url" >> $GITHUB_OUTPUT
           fi
