@@ -133,10 +133,15 @@ jobs:
             core.setOutput('number', pr.number.toString());
             core.setOutput('approved', approved.toString());
 
-      - name: Auto-merge if approved
+      - name: Merge PR directly
         if: steps.prinfo.outputs.number != '0' && steps.prinfo.outputs.approved == 'true'
-        uses: peter-evans/enable-pull-request-automerge@v3
+        uses: actions/github-script@v6
         with:
-          pull-request-number: ${{ steps.prinfo.outputs.number }}
-          merge-method: merge
-          token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.pulls.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: parseInt('${{ steps.prinfo.outputs.number }}'),
+              merge_method: 'merge'
+            });
+
