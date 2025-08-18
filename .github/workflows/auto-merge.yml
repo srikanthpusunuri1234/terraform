@@ -1,6 +1,5 @@
-name: Auto PR (create-or-update) + Notify + Auto Merge on Approved
+name: Auto PR + Notify + Auto Merge
 
-# Give Actions permission to read/write contents and PRs
 permissions:
   contents: write
   pull-requests: write
@@ -13,10 +12,14 @@ on:
   pull_request:
     types:
       - labeled
+      - synchronize
+
 jobs:
   create-or-find-pr-and-notify:
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    outputs:
+      pr_number: ${{ steps.prcheck.outputs.pr_number }}
+      pr_url: ${{ steps.prcheck.outputs.pr_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,16 +31,15 @@ jobs:
           echo "author=$(git log -1 --pretty=%an)" >> $GITHUB_OUTPUT
           echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Check for an open PR from this branch → master
+      - name: Check for an open PR to master
         id: prcheck
         uses: actions/github-script@v6
         with:
           script: |
-            // returns { pr_number, pr_url }
             const ref = context.ref.replace('refs/heads/','');
             const owner = context.repo.owner;
             const repo = context.repo.repo;
-            const base = 'master'; // CHANGE THIS if your base branch is 'main' or 'Viaridez-UAT'
+            const base = 'master';
             const res = await github.rest.pulls.list({
               owner,
               repo,
@@ -51,7 +53,7 @@ jobs:
               return { pr_number: 0, pr_url: '' };
             }
 
-      - name: Create Pull Request (only if none exists)
+      - name: Create PR if none exists
         id: create
         if: ${{ fromJson(steps.prcheck.outputs.result).pr_number == 0 }}
         uses: peter-evans/create-pull-request@v5
@@ -64,19 +66,18 @@ jobs:
 
             **Latest Commit:** ${{ steps.commit.outputs.msg }}
             **Author:** ${{ steps.commit.outputs.author }}
-          base: master   # CHANGE THIS if your base branch is 'main' or another name
+          base: master
           head: ${{ github.ref_name }}
           update-existing: false
 
-      - name: Send email (existing PR link)
-        if: ${{ fromJson(steps.prcheck.outputs.result).pr_number != 0 }}
+      - name: Send notification email
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 465
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "Approval Needed: Merge into master (existing PR)"
+          subject: "PR Notification for ${{ github.ref_name }}"
           to: srikanthpusunuri1165@gmail.com, srikanthp2425@gmail.com
           from: "GitHub Actions <${{ secrets.EMAIL_USERNAME }}>"
           body: |
@@ -88,51 +89,32 @@ jobs:
             **Author:** ${{ steps.commit.outputs.author }}
             **Commit Link:** https://github.com/${{ github.repository }}/commit/${{ steps.commit.outputs.sha }}
 
-            **Open PR:** ${{ fromJson(steps.prcheck.outputs.result).pr_url }}
-
-            Please review and approve the merge into master.
-
-      - name: Send email (newly created PR link)
-        if: ${{ fromJson(steps.prcheck.outputs.result).pr_number == 0 }}
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "Approval Needed: Merge into master (new PR created)"
-          to: srikanthpusunuri1165@gmail.com, srikanthp2425@gmail.com
-          from: "GitHub Actions <${{ secrets.EMAIL_USERNAME }}>"
-          body: |
-            Hello Reviewer,
-
-            A push was made to branch: **${{ github.ref_name }}**
-
-            **Commit Message:** ${{ steps.commit.outputs.msg }}
-            **Author:** ${{ steps.commit.outputs.author }}
-            **Commit Link:** https://github.com/${{ github.repository }}/commit/${{ steps.commit.outputs.sha }}
-
-            **New PR:** ${{ steps.create.outputs.pull-request-url }}
+            **PR Link:** ${{ steps.create.outputs.pull-request-url || fromJson(steps.prcheck.outputs.result).pr_url }}
 
             Please review and approve the merge into master.
 
   auto-merge-on-approved:
     runs-on: ubuntu-latest
     needs: create-or-find-pr-and-notify
-    if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
     steps:
-      - name: Get PR number
+      - name: Get PR number and check label
         id: prinfo
         uses: actions/github-script@v6
         with:
           script: |
-            const ref = github.event_name === 'push'
-              ? context.ref.replace('refs/heads/','')
-              : github.event.pull_request.head.ref;
+            let ref;
+            if (context.eventName === 'push') {
+              ref = context.ref.replace('refs/heads/','');
+            } else if (context.eventName === 'pull_request') {
+              ref = context.payload.pull_request.head.ref;
+            } else {
+              return { number: 0, approved: false };
+            }
+
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const base = 'master';
-  
+
             const prs = await github.rest.pulls.list({
               owner,
               repo,
@@ -140,19 +122,21 @@ jobs:
               head: `${owner}:${ref}`,
               base
             });
-  
-            if (prs.data.length === 0) return { number: 0, approved: false };
-  
+
+            if (prs.data.length === 0) {
+              return { number: 0, approved: false };
+            }
+
             const pr = prs.data[0];
             const approved = pr.labels.some(l => l.name === 'approved');
-            return { number: pr.number, approved };
+
+            core.setOutput('number', pr.number.toString());
+            core.setOutput('approved', approved.toString());
+
       - name: Auto-merge if approved
-        if: steps.prinfo.outputs.number != 0 && steps.prinfo.outputs.approved == 'true'
+        if: steps.prinfo.outputs.number != '0' && steps.prinfo.outputs.approved == 'true'
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
           pull-request-number: ${{ steps.prinfo.outputs.number }}
           merge-method: merge
           token: ${{ secrets.GITHUB_TOKEN }}
-  
-              
-         
