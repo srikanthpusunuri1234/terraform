@@ -16,6 +16,7 @@ jobs:
 
       - name: Push to GitLab
         run: |
+          git remote remove gitlab 2>/dev/null || true
           git remote add gitlab "http://oauth2:${{ secrets.GITLAB_TOKEN }}@${{ secrets.GITLAB_URL }}"
 
           if [[ "$GITHUB_REF" == refs/heads/* ]]; then
