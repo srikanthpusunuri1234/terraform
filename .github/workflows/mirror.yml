@@ -6,6 +6,11 @@ on:
       - master
     tags:
       - "*"    # mirror all tags
+  workflow_run:
+    workflows: ["Auto Merge After Approval"]   # name of your auto-merge workflow
+    types:
+      - completed
+   
 
 jobs:
   sync:
