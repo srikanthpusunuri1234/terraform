@@ -22,10 +22,11 @@ jobs:
       - name: Get latest commit info
         id: commit
         run: |
+          export TZ=Asia/Kolkata
           echo "msg=$(git log -1 --pretty=%s)" >> $GITHUB_OUTPUT
           echo "author=$(git log -1 --pretty=%an)" >> $GITHUB_OUTPUT
           echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-          echo "date=$(git log -1 --pretty=%ad --date=local)" >> $GITHUB_OUTPUT
+          echo "date=$(git log -1 --pretty=%ad --date='format:%Y-%m-%d %H:%M:%S %Z')" >> $GITHUB_OUTPUT
 
       - name: Send email to reviewers
         uses: dawidd6/action-send-mail@v3
