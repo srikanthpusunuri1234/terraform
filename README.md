@@ -1,96 +1,72 @@
-<!-- Banner -->
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f2027,50:203a43,100:2c5364&height=250&section=header&text=Srikanth%20P&fontSize=48&fontColor=ffffff&animation=fadeIn&fontAlignY=40&desc=DevOps%20Engineer%20|%20Platform%20Engineering%20|%20Cloud%20Native&descAlignY=60"/>
-</p>
-
-<h1 align="center">Hi 👋, I'm Srikanth P</h1>
-
-<h3 align="center">
-DevOps Engineer • Platform Engineering • Cloud Native • AWS
-</h3>
-
-<p align="center">
-Building scalable cloud infrastructure, Kubernetes platforms, CI/CD pipelines and AI-powered DevOps solutions.
-</p>
+<div align="center">
+  <h1>Hi there, I'm Srikanth 👋</h1>
+  <h3>DevOps Engineer | Software Developer</h3>
+</div>
 
 ---
 
-# 💻 About Me
+### 👨‍💻 About Me
 
-```text
-┌──────────────────────────────────────────────────────────────┐
-│ Name        : Srikanth P                                     │
-│ Role        : DevOps Engineer                                │
-│ Location    : India                                           │
-│ Focus       : Platform Engineering                           │
-│ Cloud       : AWS                                            │
-│ Containers  : Docker, Kubernetes, Amazon EKS                │
-│ IaC         : Terraform                                      │
-│ CI/CD       : GitHub Actions, GitLab CI                     │
-│ Monitoring  : Prometheus, Grafana, Loki, OTEL               │
-│ Languages   : Java, Bash, TypeScript                        │
-│ OS          : Linux                                          │
-│ Interests   : AI Agents for DevOps                          │
-└──────────────────────────────────────────────────────────────┘
-```
-
----
-
-# 🚀 Tech Stack
-
-## Cloud
-
-<p>
-<img src="https://skillicons.dev/icons?i=aws"/>
-</p>
-
-## DevOps
-
-<p>
-<img src="https://skillicons.dev/icons?i=docker,kubernetes,terraform,linux,githubactions,git,bash"/>
-</p>
-
-## Backend
-
-<p>
-<img src="https://skillicons.dev/icons?i=java,spring,maven,nodejs,ts"/>
-</p>
-
-## Monitoring
-
-- Prometheus
-- Grafana
-- Loki
-- OpenTelemetry
-- Alertmanager
-
----
-
-# 🌱 Currently Working On
-
-- Platform Engineering
-- Internal Developer Platforms
-- AI Agents for Kubernetes
-- OpenTelemetry Observability
-- GitHub Actions Automation
-- AWS Infrastructure Automation
+<div align="center">
+<table style="border: 1px solid #30363d; border-radius: 8px; background-color: #0d1117; color: #c9d1d9; font-family: monospace; width: 100%;">
+  <tr>
+    <td style="padding: 20px; font-size: 8px; line-height: 8px; letter-spacing: 2px; white-space: pre; color: #8b949e; text-align: center; vertical-align: middle;">
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@##%%%%%%%%##@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@##*+===------===+*##@@@@@@@@@@@@@@@
+@@@@@@@@@@@@#+==----------------==+#@@@@@@@@@@@@@
+@@@@@@@@@@@+=-::::------------::::-=+@@@@@@@@@@@@
+@@@@@@@@@@+=--::::------------::::--=+@@@@@@@@@@@
+@@@@@@@@@+=-::..                ..::-=+@@@@@@@@@@
+@@@@@@@@#=-::..                  ..::-=#@@@@@@@@@
+@@@@@@@@+=-::.       ....       . .::-=+@@@@@@@@@
+@@@@@@@@=-::.    ..:--:::--:..    .::--=@@@@@@@@@
+@@@@@@@@=-::.  .:-==-------==-:.  .::--=@@@@@@@@@
+@@@@@@@%=-::. .:-==--:::::--==-.  .::--=%@@@@@@@@
+@@@@@@@%=-::. .:-==-..   ..-==-.  .::--=%@@@@@@@@
+@@@@@@@%=-::. .:-==-.     .-==-.  .::--=%@@@@@@@@
+@@@@@@@%=-::. .:-==-:::::::==-:.  .::--=%@@@@@@@@
+@@@@@@@@=-::.  .:-===========:-.  .::--=@@@@@@@@@
+@@@@@@@@=-::.    ..:-------:..    .::--=@@@@@@@@@
+@@@@@@@@+=-::.       .....        .::-=+@@@@@@@@@
+@@@@@@@@#=-::..                  ..::-=#@@@@@@@@@
+@@@@@@@@@+=-::..                ..::-=+@@@@@@@@@@
+@@@@@@@@@@+=--::::------------::::--=+@@@@@@@@@@@
+@@@@@@@@@@@+=-::::------------::::-=+@@@@@@@@@@@@
+@@@@@@@@@@@@#+==----------------==+#@@@@@@@@@@@@@
+@@@@@@@@@@@@@@##*+===------===+*##@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@##%%%%%%%%##@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    </td>
+    <td style="padding: 20px; font-size: 14px; vertical-align: top; border-left: 1px solid #30363d;">
+      <p style="color: #58a6ff; font-weight: bold; margin-bottom: 15px;">srikanth@devops-node ~ % neofetch</p>
+      <p><b>OS:</b> Linux / Windows</p>
+      <p><b>Host:</b> Local AI Rig (16 Cores, 5GB DDR5, RTX 2050)</p>
+      <p><b>Kernel:</b> Kubernetes (GKE, EKS, kOps)</p>
+      <p><b>Role:</b> DevOps Engineer & Software Developer</p>
+      <hr style="border-color: #30363d; margin: 15px 0;">
+      <p><b>Languages:</b> Python, Java, Dart, Bash, HCL</p>
+      <p><b>Frameworks:</b> Flutter</p>
+      <p><b>Tools.Cloud:</b> AWS, GCP, Terraform</p>
+      <p><b>Tools.CI_CD:</b> Docker, CI/CD Pipelines, Nginx</p>
+      <hr style="border-color: #30363d; margin: 15px 0;">
+      <p><b>Projects.Current:</b></p>
+      <ul style="margin-top: 5px; padding-left: 20px;">
+        <li><i>The Fleet Destination</i> (Microservices Migration)</li>
+        <li>AI-powered School ERP System (Ollama ReAct Agents)</li>
+      </ul>
+    </td>
+  </tr>
+</table>
+</div>
 
 ---
 
-# 📂 Featured Projects
-
-### ☁️ AI DevOps Agent
-
-An autonomous DevOps assistant capable of:
-
-- Generating Kubernetes manifests
-- Terraform automation
-- CI/CD generation
-- Kubernetes troubleshooting
-- Infrastructure analysis
-
----
-
+### ⚡ Recent Activity
+- 🚀 Exploring Agentic DevOps & Local LLMs
+- 🔧 Hardening production-grade Nginx & Redis caches
+- 🏗️ Implementing High-Availability GKE Standard clusters
 ### 🚀 Platform Engineering Lab
 
 Self-service developer platform built using
